@@ -11,19 +11,28 @@ namespace EmailApp.Controllers
     [ApiController]
     public class EmailController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult SendEmail(string body)
+        private readonly IEmaiService _emailService;
+
+        public EmailController(IEmaiService emailService)
         {
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse("glen.langworth26@ethereal.email"));
-            email.To.Add(MailboxAddress.Parse("glen.langworth26@ethereal.email"));
-            email.Subject = "Test Email Subject";
-            email.Body = new TextPart(TextFormat.Html) { Text = body };
-            using var smtp = new SmtpClient();
-            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate("glen.langworth26@ethereal.email", "nhqFytft6Ur4SwJyAk");
-            smtp.Send(email);
-            smtp.Disconnect(true);
+            _emailService = emailService;
+        }
+
+        [HttpPost]
+        public IActionResult SendEmail(EmailDto request)
+        {
+            //var email = new MimeMessage();
+            //email.From.Add(MailboxAddress.Parse("glen.langworth26@ethereal.email"));
+            //email.To.Add(MailboxAddress.Parse("glen.langworth26@ethereal.email"));
+            //email.Subject = "Test Email Subject";
+            //email.Body = new TextPart(TextFormat.Html) { Text = body };
+            //using var smtp = new SmtpClient();
+            //smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+            //smtp.Authenticate("glen.langworth26@ethereal.email", "nhqFytft6Ur4SwJyAk");
+            //smtp.Send(email);
+            //smtp.Disconnect(true);
+
+            _emailService.SendEmail(request);
             return Ok();
         }
     }
